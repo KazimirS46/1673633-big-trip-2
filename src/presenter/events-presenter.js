@@ -2,7 +2,7 @@ import EventsView from '../view/events-view.js';
 import EventsSortView from '../view/events-sort-view.js';
 import EventListView from '../view/event-list-view.js';
 import EventItemView from '../view/event-item-view.js';
-import EditEventItemView from '../view/new-event-item-view.js';
+import EditEventItemView from '../view/edit-event-item-view.js';
 import { render } from '../render.js';
 
 export default class EventsPresenter {
