@@ -23,9 +23,19 @@ export default class EventsPresenter {
 
     for (let i = 0; i < this.pointsList.length; i++) {
       if (i === 0) {
-        render(new EditPointItemView(), this.pointsListComponent.getElement(), 'beforeend');
+        render(new EditPointItemView({
+          point: this.pointsList[i],
+          currentOffers: this.pointsModel.getOffersById(i),
+          destinations: this.pointsModel.destinations,
+          price: this.pointsModel.getPriceWithOffers(i)
+        }), this.pointsListComponent.getElement(), 'beforeend');
       } else {
-        render(new PointItemView({point: this.pointsList[i], offers: this.pointsModel.offers}), this.pointsListComponent.getElement(), 'beforeend');
+        render(new PointItemView({
+          point: this.pointsList[i],
+          offers: this.pointsModel.getOffersById(i),
+          destination: this.pointsModel.getDestinationById(i),
+          price: this.pointsModel.getPriceWithOffers(i)
+        }), this.pointsListComponent.getElement(), 'beforeend');
       }
     }
   }

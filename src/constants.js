@@ -1,4 +1,4 @@
-const TypePoints = {
+const TypePointsEnum = {
   BUS: 'bus',
   TAXI: 'taxi',
   TRAIN: 'train',
@@ -10,4 +10,16 @@ const TypePoints = {
   SIGHTSEEING: 'sightseeing',
 };
 
-export {TypePoints};
+const TYPE_POINTS = [
+  TypePointsEnum.FLIGHT,
+  TypePointsEnum.TRAIN,
+  TypePointsEnum.BUS,
+  TypePointsEnum.SHIP,
+  TypePointsEnum.CHECK,
+  TypePointsEnum.SIGHTSEEING,
+  TypePointsEnum.TAXI,
+  TypePointsEnum.DRIVE,
+  TypePointsEnum.RESTAURANT,
+];
+
+export {TypePointsEnum, TYPE_POINTS};

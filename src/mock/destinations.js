@@ -1,21 +1,139 @@
-import { getRandomArrayElement } from '../utils';
-
 const mockDestinations = [
   {
-    id: 'cfe416cq-10xa-ye10-8077-2fs9a01edcab',
-    destinations: 'Chamonix, is a beautiful city, a true asian pearl, with crowded streets.',
+    id: '1',
+    description: 'Chamonix, is a beautiful city, a true alpine pearl, with stunning mountain views.',
     name: 'Chamonix',
     pictures: [
       {
-        src: 'http://picsum.photos/300/200?r=0.0762563005163317',
-        description: 'Chamonix parliament building'
+        src: 'https://avatars.mds.yandex.net/i?id=663f9c59ec0d2d41572f4cbe105fd12ceee46d02-12421657-images-thumbs&n=13',
+        description: 'Mont Blanc from Pointe Helbronner'
+      },
+      {
+        src: 'https://i2-prod.dailyrecord.co.uk/article1140566.ece/ALTERNATES/s615b/Cable%20car%20on%20the%20Mont%20Blanc',
+        description: 'Aiguille du Midi cable car'
+      }
+    ]
+  },
+  {
+    id: '2',
+    description: 'Venice, known for its canals and gondolas, is a romantic Italian city.',
+    name: 'Venice',
+    pictures: [
+      {
+        src: 'https://img1.advisor.travel/f550x450px-Grand_Canal_Venice_14.jpg',
+        description: 'Grand Canal in Venice'
+      },
+      {
+        src: 'https://avatars.mds.yandex.net/i?id=cf3ae1112a821daf1f30c87ac8656160_l-9456457-images-thumbs&n=13',
+        description: 'Piazza San Marco'
+      }
+    ]
+  },
+  {
+    id: '3',
+    description: 'Amsterdam, famous for its art museums, canals, and bicycle culture.',
+    name: 'Amsterdam',
+    pictures: [
+      {
+        src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Amsterdam_Canal_view_02.jpg/640px-Amsterdam_Canal_view_02.jpg',
+        description: 'Canal view in Amsterdam'
+      },
+      {
+        src: 'https://cdn.getyourguide.com/img/tour/e92600525b690c23.jpeg/146.jpg',
+        description: 'Rijksmuseum entrance'
+      }
+    ]
+  },
+  {
+    id: '4',
+    description: 'Geneva, renowned for its international organizations and luxury watches.',
+    name: 'Geneva',
+    pictures: [
+      {
+        src: 'https://live.staticflickr.com/7380/8770013547_fce50bab0a_b.jpg',
+        description: 'Jet d\'Eau fountain in Lake Geneva'
+      },
+      {
+        src: 'https://home.cern/sites/default/files/2018-06/max_7848.jpg',
+        description: 'CERN Building 40'
+      }
+    ]
+  },
+  {
+    id: '5',
+    description: 'Berlin, the capital of Germany, known for its history and vibrant arts scene.',
+    name: 'Berlin',
+    pictures: [
+      {
+        src: 'https://i.pinimg.com/736x/fb/94/b4/fb94b4080194bd7b5d81a0a94368196c.jpg',
+        description: 'Berliner Dom and TV tower at night'
+      },
+      {
+        src: 'https://www.reisgenieten.nl/media/brandenburger-tor800x400.jpg',
+        description: 'Brandenburg Gate at night'
+      }
+    ]
+  },
+  {
+    id: '6',
+    description: 'Barcelona, celebrated for its architecture by Antoni Gaudi and Mediterranean lifestyle.',
+    name: 'Barcelona',
+    pictures: [
+      {
+        src: 'https://media.cnn.com/api/v1/images/stellar/prod/2021-05-24t000000z-1024312969-rc2gmn99ozqh-rtrmadp-3-health-coronavirus-spain-sagrada-familia.JPG?c=16x9&q=w_800,c_fill',
+        description: 'Sagrada Família in Barcelona'
+      },
+      {
+        src: 'https://media.timeout.com/images/103813664/750/562/image.jpg',
+        description: 'La Pedrera house'
+      }
+    ]
+  },
+  {
+    id: '7',
+    description: 'Paris, famed for its landmarks like Eiffel Tower and Louvre Museum.',
+    name: 'Paris',
+    pictures: [
+      {
+        src: 'https://media.istockphoto.com/id/598128148/ru/видео/эйфелева-башня-париж-time-lapse-увеличить-солнечный-свет.jpg?s=640x640&k=20&c=Fib7E8hsZD9zQzxmS1nyZXjt-TbrMaL6pWgoY6BFJc0=',
+        description: 'Eiffel Tower close-up'
+      },
+      {
+        src: 'https://s.yimg.com/ny/api/res/1.2/9z46Y8TNiZKV8duJ_XdLBg--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyNDI7aD02OTk7Y2Y9d2VicA--/https://media.zenfs.com/en/cnn_articles_875/419a40f41d7d3a68ccaccd724be371e3',
+        description: 'Louvre Museum'
+      }
+    ]
+  },
+  {
+    id: '8',
+    description: 'Rome, home to ancient ruins such as Colosseum and Vatican City.',
+    name: 'Rome',
+    pictures: [
+      {
+        src: 'https://s.yimg.com/ny/api/res/1.2/5.46RxeqcBDgwRGbGaOQBg--/YXBwaWQ9aGlnaGxhbmRlcjt3PTk2MDtoPTY0MDtjZj13ZWJw/https://media.zenfs.com/en/ap.org/32c139b520bc7c4f93cb99ee4eacc4a2',
+        description: 'Colosseum in Rome'
+      },
+      {
+        src: 'https://t4.ftcdn.net/jpg/02/46/83/25/360_F_246832504_qxyj5fhGd2EuZRsYAPmEikctfVxcEF2v.jpg',
+        description: 'Aerial view of Vatican City'
+      }
+    ]
+  },
+  {
+    id: '9',
+    description: 'London, iconic for Big Ben, Buckingham Palace, and diverse cultural offerings.',
+    name: 'London',
+    pictures: [
+      {
+        src: 'https://img.freepik.com/premium-photo/low-angle-view-clock-tower-against-cloudy-sky_1048944-29616373.jpg?semt=ais_hybrid',
+        description: 'Big Ben clock tower'
+      },
+      {
+        src: 'https://s.yimg.com/ny/api/res/1.2/yBPL5KfCDj8Wn5d_lFHrgg--/YXBwaWQ9aGlnaGxhbmRlcjt3PTEyNDI7aD02OTk7Y2Y9d2VicA--/https://media.zenfs.com/en/out_traveler_articles_603/8145cb11359e4339c6b7aa6495743389',
+        description: 'Buckingham Palace guard change ceremony'
       }
     ]
   }
 ];
 
-function getRandomDestinations() {
-  return getRandomArrayElement(mockDestinations);
-}
-
-export { getRandomDestinations };
+export default mockDestinations;

@@ -1,11 +1,16 @@
 import dayjs from 'dayjs';
-import { TypePoints } from './constants';
+import { TypePointsEnum } from './constants';
 
 const DATE_FORMAT = 'MMMM D';
+const FULL_DATE_FORMAT = 'DD/MM/YY HH:mm';
 const TIME_FORMAT = 'HH:mm';
 const SECONDS_IN_MINUTES = 60;
 const MINUTES_IN_HOUR = 60;
 const HOURS_IN_DAY = 24;
+
+function getFullDate(date) {
+  return dayjs(date).format(FULL_DATE_FORMAT);
+}
 
 function getCapitalizedWord(word) {
   return word[0].toUpperCase() + word.slice(1);
@@ -70,31 +75,40 @@ function calculateTimeDifference(start, end) {
 
 function getIconSrcByType(type) {
   switch (type) {
-    case TypePoints.FLIGHT:
+    case TypePointsEnum.FLIGHT:
       return 'img/icons/flight.png';
-    case TypePoints.TRAIN:
+    case TypePointsEnum.TRAIN:
       return 'img/icons/train.png';
-    case TypePoints.BUS:
+    case TypePointsEnum.BUS:
       return 'img/icons/bus.png';
-    case TypePoints.SHIP:
+    case TypePointsEnum.SHIP:
       return 'img/icons/ship.png';
-    case TypePoints.CHECK:
+    case TypePointsEnum.CHECK:
       return 'img/icons/check-in.png';
-    case TypePoints.SIGHTSEEING:
+    case TypePointsEnum.SIGHTSEEING:
       return 'img/icons/sightseeing.png';
-    case TypePoints.TAXI:
+    case TypePointsEnum.TAXI:
       return 'img/icons/taxi.png';
-    case TypePoints.DRIVE:
+    case TypePointsEnum.DRIVE:
       return 'img/icons/drive.png';
-    case TypePoints.RESTAURANT:
+    case TypePointsEnum.RESTAURANT:
       return 'img/icons/restaurant.png';
     default:
       return 'bus';
   }
 }
 
-function getOffersByType(type, offers) {
-  return offers.find((offer) => offer.type === type);
+function getTimeParams(start, end) {
+  const timeStart = humanizePointTime(start);
+  const timeEnd = humanizePointTime(end);
+
+  const difference = calculateTimeDifference(start, end);
+  return {
+    timeStart,
+    timeEnd,
+    duration: difference.time,
+    positiveDuration: difference.positive
+  };
 }
 
 export {
@@ -104,5 +118,6 @@ export {
   getIconSrcByType,
   calculateTimeDifference,
   getCapitalizedWord,
-  getOffersByType
+  getTimeParams,
+  getFullDate
 };

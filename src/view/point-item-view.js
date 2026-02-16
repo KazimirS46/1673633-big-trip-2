@@ -2,10 +2,8 @@ import { createElement } from '../render';
 import {
   humanizePointDate,
   getIconSrcByType,
-  humanizePointTime,
-  calculateTimeDifference,
   getCapitalizedWord,
-  getOffersByType
+  getTimeParams
 } from '../utils';
 
 function createOfferTemplate(offer) {
@@ -18,17 +16,10 @@ function createOfferTemplate(offer) {
   `);
 }
 
-function createPointItemTemplate(point, offers) {
+function createPointItemTemplate(point, offers, destination, price) {
   const date = humanizePointDate(point.dateFrom);
   const icon = getIconSrcByType(point.type);
-  const timeStart = humanizePointTime(point.dateFrom);
-  const timeEnd = humanizePointTime(point.dateTo);
-  const difference = calculateTimeDifference(point.dateFrom, point.dateTo);
-
-  const currentOffersByType = getOffersByType(point.type, offers);
-  const availableOffers = currentOffersByType.offers.filter((offer) => point.offers.includes(offer.id)) || [];
-
-  const price = availableOffers.reduce((acc, offer) => acc + offer.price, point.basePrice) || point.basePrice;
+  const timeParams = getTimeParams(point.dateFrom, point.dateTo);
 
   return (`
     <li class="trip-events__item">
@@ -39,26 +30,26 @@ function createPointItemTemplate(point, offers) {
           <img class="event__type-icon" width="42" height="42" src=${icon} alt="Event type icon">
         </div>
 
-        <h3 class="event__title">${getCapitalizedWord(point.type)} ${point.destination}</h3>
+        <h3 class="event__title">${getCapitalizedWord(point.type)} ${destination.name}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">${timeStart}</time>
+            <time class="event__start-time" datetime="2019-03-18T10:30">${timeParams.timeStart}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">${timeEnd}</time>
+            <time class="event__end-time" datetime="2019-03-18T11:00">${timeParams.timeEnd}</time>
           </p>
-          <p class="event__duration">${difference.time}</p>
+          <p class="event__duration">${timeParams.duration}</p>
         </div>
 
         <p class="event__price">
           &euro;&nbsp;<span class="event__price-value">${price}</span>
         </p>
 
-        ${availableOffers.length > 0 ? (`
+        ${offers.offersById.length > 0 ? (`
           <h4 class="visually-hidden">Offers:</h4>
 
           <ul class="event__selected-offers">
-            ${availableOffers.map((offer) => createOfferTemplate(offer)).join('')}
+            ${offers.offersById.map((offer) => createOfferTemplate(offer)).join('')}
           </ul>
         `) : ''}
 
@@ -78,13 +69,20 @@ function createPointItemTemplate(point, offers) {
 }
 
 export default class PointItemView {
-  constructor({point, offers}) {
+  constructor({point, offers, destination, price}) {
     this.point = point;
     this.offers = offers;
+    this.destination = destination;
+    this.price = price;
   }
 
   getTemplate() {
-    return createPointItemTemplate(this.point, this.offers);
+    return createPointItemTemplate(
+      this.point,
+      this.offers,
+      this.destination,
+      this.price
+    );
   }
 
   getElement() {
