@@ -1,5 +1,8 @@
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { TypePointsEnum } from './constants';
+
+dayjs.extend(utc);
 
 const DATE_FORMAT = 'MMMM D';
 const FULL_DATE_FORMAT = 'DD/MM/YY HH:mm';
@@ -8,13 +11,37 @@ const SECONDS_IN_MINUTES = 60;
 const MINUTES_IN_HOUR = 60;
 const HOURS_IN_DAY = 24;
 
+/**
+ * Возвращает строку, представляющую дату в формате ДД.ММ.ГГ ЧЧ:мм,
+ * или пустую строку, если дата недействительна.
+ * @param {string} date - дата для форматирования в формате ISO 8601
+ * @returns {string} строка с отформатированной датой
+ */
 function getFullDate(date) {
-  return dayjs(date).format(FULL_DATE_FORMAT);
+  if (!date || !date.length || !dayjs(date).isValid()) {
+    return 'date undefined';
+  }
+  return dayjs.utc(date).format(FULL_DATE_FORMAT);
 }
 
+/**
+ * Возвращает строку с заглавной первой буквой.
+ * Если ввод не является строкой или пуст, возвращает пустую строку.
+ * @param {string} word - строка для преобразования
+ * @returns {string} преобразованная строка
+ */
 function getCapitalizedWord(word) {
-  return word[0].toUpperCase() + word.slice(1);
+  if (!word || typeof word !== 'string') {
+    return '';
+  }
+  return word.charAt(0).toUpperCase() + word.slice(1);
 }
+
+/**
+ * Возвращает случайный элемент из массива.
+ * @param {array} elements - массив элементов
+ * @returns {any} случайный элемент из массива
+ */
 function getRandomArrayElement(elements) {
   return elements[Math.floor(Math.random() * elements.length)];
 }
