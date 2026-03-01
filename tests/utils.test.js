@@ -1,15 +1,19 @@
-import { test, expect, describe } from '@jest/globals';
-import { getFullDate, getCapitalizedWord } from '../src/utils';
+import { expect, describe, it } from '@jest/globals';
+import {
+  getFullDate,
+  getCapitalizedWord,
+  getRandomArrayElement,
+} from '../src/utils';
 
-describe('getFullDate function', () => {
-  test('Возвращает данные в формате DD/MM/YY HH:mm', () => {
+describe('should convert ISO to custom format', () => {
+  it('when valid ISO date is provided, returns data in format DD/MM/YY HH:mm', () => {
     const inputDate = '2023-10-18T14:30:00Z';
     const expectedOutput = '18/10/23 14:30';
 
-    expect(getFullDate(inputDate)).toEqual(expectedOutput);
+    expect(getFullDate(inputDate)).toBe(expectedOutput);
   });
 
-  test('Корректно обрабатывает крайние случаи с разными месяцами и годами', () => {
+  it('when different month and year values are passed, handles them correctly', () => {
     const datesToTest = [
       { date: '2023-01-01T00:00:00Z', expected: '01/01/23 00:00' },
       { date: '2023-12-31T23:59:59Z', expected: '31/12/23 23:59' },
@@ -17,46 +21,69 @@ describe('getFullDate function', () => {
     ];
 
     for (const { date, expected } of datesToTest) {
-      expect(getFullDate(date)).toEqual(expected);
+      expect(getFullDate(date)).toBe(expected);
     }
   });
 
-  test('Возвращает пустую строку при указании неверной даты', () => {
+  it('when invalid or non-date value is passed, returns \'date undefined\'', () => {
     const invalidInputs = [undefined, NaN, '', {}, [], true, 1234567890, 'invalid-date'];
 
     for (const input of invalidInputs) {
-      expect(getFullDate(input)).toEqual('date undefined');
+      expect(getFullDate(input)).toBe('date undefined');
     }
   });
 });
 
-describe('getCapitalizedWord function', () => {
-  test('правильно капитализирует первый символ', () => {
+describe('should capitalize first letter', () => {
+  it('when single word is passed, properly capitalizes first character', () => {
     expect(getCapitalizedWord('hello')).toBe('Hello');
   });
 
-  test('не меняет остальные символы строки', () => {
+  it('when multiple characters are present, leaves other letters unchanged', () => {
     expect(getCapitalizedWord('world')).toBe('World');
   });
 
-  test('обрабатывает пустую строку', () => {
+  it('when empty string is passed, returns empty string', () => {
     expect(getCapitalizedWord('')).toBe('');
   });
 
-  test('корректно обрабатывает строку длиной в один символ', () => {
+  it('when one-character string is passed, converts it to uppercase', () => {
     expect(getCapitalizedWord('a')).toBe('A');
   });
 
-  test('работает с цифрами и специальными символами', () => {
+  it('when numbers or special symbols are included, does not change them', () => {
     expect(getCapitalizedWord('123abc')).toBe('123abc');
     expect(getCapitalizedWord('@test')).toBe('@test');
   });
 
-  test('Возвращает пустую строку при указании неверной даты', () => {
+  it('when the data is invalid, returns the empty string', () => {
     const invalidInputs = [undefined, NaN, {}, [], true, 1234567890];
 
     for (const input of invalidInputs) {
       expect(getCapitalizedWord(input)).toBe('');
     }
+  });
+});
+
+describe('should return a random array element or null', () => {
+  it('when the array is not empty and valid', () => {
+    const array = ['apple', 'banana', 'cherry'];
+    const result = getRandomArrayElement(array);
+
+    expect(array.includes(result)).toBe(true);
+  });
+
+  it('when the array is empty', () => {
+    const array = [];
+    const result = getRandomArrayElement(array);
+
+    expect(result).toBe(null);
+  });
+
+  it('when not an array', () => {
+    const array = 'not an array';
+    const result = getRandomArrayElement(array);
+
+    expect(result).toBeNull();
   });
 });

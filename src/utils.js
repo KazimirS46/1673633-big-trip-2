@@ -37,16 +37,31 @@ function getCapitalizedWord(word) {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
+
 /**
- * Возвращает случайный элемент из массива.
- * @param {array} elements - массив элементов
- * @returns {any} случайный элемент из массива
+ * Возвращает случайный элемент из заданного массива.
+ * Если входные данные не являются массивом или пусты, возвращает значение null.
+ * @param {Array} elements - массив, из которого требуется получить случайный элемент.
+ * @returns {?*} - случайный элемент из массива или значение null, если массив пуст или не является массивом
  */
 function getRandomArrayElement(elements) {
+  if (!Array.isArray(elements) || elements.length === 0) {
+    return null;
+  }
+
   return elements[Math.floor(Math.random() * elements.length)];
 }
 
+/**
+ * Функция преобразует дату в формате ISO 8601 в строку, представляющую дату в формате ММММ ДД.
+ * @param {string} rawDate - дата в формате ISO 8601
+ * @returns {string} строка с отформатированной датой
+ */
 function humanizePointDate(rawDate) {
+  if (!dayjs(rawDate).isValid()) {
+    return '';
+  }
+
   const date = dayjs(rawDate).format(DATE_FORMAT);
   const day = date.slice(-2);
   const month = date.slice(0, 3);

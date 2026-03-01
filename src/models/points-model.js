@@ -26,11 +26,11 @@ export default class PointsModel {
   }
 
   getOffersById(id) {
-    const offersByType = this.getOffersByType(this.points[id].type);
-    const offerIdsByPointId = this.points[id].offers || [];
+    const offersByType = this.points ? this.getOffersByType(this.points[id].type) : [];
+    const offerIdsByPointId = this.points ? this.points[id].offers : [];
     const offersById = offersByType.offers.filter((offer) => offerIdsByPointId.includes(offer.id));
     return {
-      offersByType: offersByType.offers,
+      offersByType: offersByType.offers || [],
       offersById
     };
   }
