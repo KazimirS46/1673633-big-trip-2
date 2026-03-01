@@ -4,12 +4,16 @@ import { TypePointsEnum } from './constants';
 
 dayjs.extend(utc);
 
-const DATE_FORMAT = 'MMMM D';
+const DATE_FORMAT = 'MMM D';
 const FULL_DATE_FORMAT = 'DD/MM/YY HH:mm';
 const TIME_FORMAT = 'HH:mm';
 const SECONDS_IN_MINUTES = 60;
 const MINUTES_IN_HOUR = 60;
 const HOURS_IN_DAY = 24;
+
+function convertToUtc(stringDate) {
+  return dayjs.utc(stringDate);
+}
 
 /**
  * Возвращает строку, представляющую дату в формате ДД.ММ.ГГ ЧЧ:мм,
@@ -52,38 +56,55 @@ function getRandomArrayElement(elements) {
   return elements[Math.floor(Math.random() * elements.length)];
 }
 
+
 /**
- * Функция преобразует дату в формате ISO 8601 в строку, представляющую дату в формате ММММ ДД.
+ * Возвращает строку, представляющую дату в формате MMM D,
+ * или пустую строку, если дата не валидна.
  * @param {string} rawDate - дата в формате ISO 8601
- * @returns {string} строка с отформатированной датой
+ * @returns {string} строка с отформатированной датой или пустую строку, если дата неверна
  */
 function humanizePointDate(rawDate) {
   if (!dayjs(rawDate).isValid()) {
     return '';
   }
 
-  const date = dayjs(rawDate).format(DATE_FORMAT);
-  const day = date.slice(-2);
-  const month = date.slice(0, 3);
+  if (typeof rawDate !== 'string') {
+    return '';
+  }
 
-  return `${month} ${day}`;
+  const date = dayjs.utc(rawDate).format(DATE_FORMAT);
+
+  return date;
 }
 
+/**
+ * Возвращает строку, представляющую время в формате ЧЧ:мм,
+ * или пустую строку, если время не валидно.
+ * @param {string} rawDate - время в формате ISO 8601
+ * @returns {string} строка с отформатированным временем или пустую строку, если время не валидно
+ */
 function humanizePointTime(rawDate) {
-  return dayjs(rawDate).format(TIME_FORMAT);
+  if (!dayjs(rawDate).isValid()) {
+    return '';
+  }
+
+  if (typeof rawDate !== 'string') {
+    return '';
+  }
+
+  return dayjs.utc(rawDate).format(TIME_FORMAT);
 }
 
-function calculateTimeDifference(start, end) {
-  const startDate = dayjs(start);
-  const endDate = dayjs(end);
-  const difference = endDate.diff(startDate, 'seconds');
-  const positiveDifference = difference >= 0;
+function getSecondsDifference(start, end) {
+  return end.diff(start, 'seconds');
+}
 
+function splitIntoComponents(totalSeconds) {
   const secondsInHour = SECONDS_IN_MINUTES * MINUTES_IN_HOUR;
   const secondsInDay = secondsInHour * HOURS_IN_DAY;
 
-  const days = Math.floor(difference / secondsInDay);
-  const remainderAfterDays = difference % secondsInDay;
+  const days = Math.floor(totalSeconds / secondsInDay);
+  const remainderAfterDays = totalSeconds % secondsInDay;
 
   const hours = Math.floor(remainderAfterDays / secondsInHour);
   const remainderAfterHours = remainderAfterDays % secondsInHour;
@@ -91,6 +112,10 @@ function calculateTimeDifference(start, end) {
   const minutes = Math.floor(remainderAfterHours / SECONDS_IN_MINUTES);
   const seconds = remainderAfterHours % SECONDS_IN_MINUTES;
 
+  return { days, hours, minutes, seconds };
+}
+
+function formatOutput({ days, hours, minutes, seconds }) {
   let formattedDiffereceTime = '';
 
   if (days > 0) {
@@ -109,9 +134,31 @@ function calculateTimeDifference(start, end) {
     formattedDiffereceTime += `${seconds}S`;
   }
 
+  return formattedDiffereceTime.trim();
+}
+
+/**
+ * Вычисляет разницу между двумя датами в секундах и форматирует ее в удобочитаемую строку.
+ * Возвращает объект с двумя свойствами: "time" и "positive`.
+ * `time` - это строка, представляющая разницу во времени в формате DDHHMMSS.
+ * `positive" - это логическое значение, указывающее, является ли разница положительной (дата окончания находится после даты начала) или нет.
+ * @param {string} start - дата начала в формате ISO 8601
+ * @param {string} end - дата окончания в формате ISO 8601
+ * @returns {object} объект сj свойствами `time` и `positive` свойствами
+ */
+function calculateTimeDifference(start, end) {
+  const startDate = convertToUtc(start);
+  const endDate = convertToUtc(end);
+  const difference = getSecondsDifference(startDate, endDate);
+
+  const positiveDifference = difference >= 0;
+
+  const components = splitIntoComponents(difference);
+  const formattedTime = formatOutput(components);
+
   return {
-    time: formattedDiffereceTime,
-    positive: positiveDifference
+    time: formattedTime,
+    positive: positiveDifference,
   };
 }
 

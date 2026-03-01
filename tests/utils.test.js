@@ -3,6 +3,7 @@ import {
   getFullDate,
   getCapitalizedWord,
   getRandomArrayElement,
+  humanizePointDate
 } from '../src/utils';
 
 describe('should convert ISO to custom format', () => {
@@ -87,3 +88,20 @@ describe('should return a random array element or null', () => {
     expect(result).toBeNull();
   });
 });
+
+describe('should return a string representing the date in MMM D format or an empty string if the date is not valid.', () => {
+  it('when the data is in ISO 8601 format', () => {
+    expect(humanizePointDate('2023-08-15T12:34:56Z')).toBe('Aug 15');
+    expect(humanizePointDate('2025-01-01')).toBe('Jan 1');
+    expect(humanizePointDate('2024-12-31T23:59:59Z')).toBe('Dec 31');
+  });
+
+  it('when the value is invalid, returns the empty string', () => {
+    const invalidValues = ['invalid-date', undefined, NaN, 1234567890];
+
+    for (const input of invalidValues) {
+      expect(humanizePointDate(input)).toBe('');
+    }
+  });
+});
+
